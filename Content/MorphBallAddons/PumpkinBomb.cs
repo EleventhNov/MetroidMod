@@ -16,10 +16,6 @@ namespace MetroidMod.Content.MorphBallAddons
 
 		public override bool AddOnlyAddonItem => false;
 
-		public override bool CanGenerateOnChozoStatue() => Common.Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues;
-
-		public override double GenerationChance() => 4;
-
 		public override void SetStaticDefaults()
 		{
 			// DisplayName.SetDefault("Pumpkin Morph Ball Bombs");

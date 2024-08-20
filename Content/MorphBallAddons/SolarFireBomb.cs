@@ -14,9 +14,6 @@ namespace MetroidMod.Content.MorphBallAddons
 
 		public override bool AddOnlyAddonItem => false;
 
-		public override bool CanGenerateOnChozoStatue() => Common.Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues || NPC.downedAncientCultist;
-
-		public override double GenerationChance() => 1;
 
 		public override void SetStaticDefaults()
 		{

@@ -27,10 +27,6 @@ namespace MetroidMod.Content.SuitAddons
 
 		public override bool AddOnlyAddonItem => false;
 
-		public override bool CanGenerateOnChozoStatue() => Common.Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues || MSystem.bossesDown.HasFlag(MetroidBossDown.downedOmegaPirate);
-
-		public override double GenerationChance() => 4;
-
 		public override void SetStaticDefaults()
 		{
 			// DisplayName.SetDefault("Phazon Suit");

@@ -14,10 +14,6 @@ namespace MetroidMod.Content.MorphBallAddons
 
 		public override bool AddOnlyAddonItem => false;
 
-		//public override bool CanGenerateOnChozoStatue() => true;
-
-		//public override double GenerationChance() => 30;
-
 		public override void SetStaticDefaults()
 		{
 			// DisplayName.SetDefault("Morph Ball Bombs");

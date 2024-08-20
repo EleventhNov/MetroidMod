@@ -19,10 +19,6 @@ namespace MetroidMod.Content.SuitAddons
 
 		public override bool AddOnlyAddonItem => false;
 
-		public override bool CanGenerateOnChozoStatue() => true;
-
-		public override double GenerationChance() => Common.Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues ? 4 : 5;
-
 		public override void SetStaticDefaults()
 		{
 			// DisplayName.SetDefault("X-Ray Scope");

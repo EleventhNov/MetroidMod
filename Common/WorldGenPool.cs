@@ -114,21 +114,21 @@ namespace MetroidMod.Common
 				pool.AddItem<PlasmaBeamRedAddon>(4);
 			}
 
-			foreach (ModSuitAddon addon in SuitAddonLoader.addons)
-			{
-				if (addon.CanGenerateOnChozoStatue())
-				{
-					pool.Add(addon.ItemType, addon.GenerationChance());
-				}
-			}
+			//foreach (ModSuitAddon addon in SuitAddonLoader.addons)
+			//{
+			//	if (addon.CanGenerateOnChozoStatue())
+			//	{
+			//		pool.Add(addon.ItemType, addon.GenerationChance());
+			//	}
+			//}
 
-			foreach (ModMBAddon addon in MBAddonLoader.addons)
-			{
-				if (addon.CanGenerateOnChozoStatue())
-				{
-					pool.Add(addon.ItemType, addon.GenerationChance());
-				}
-			}
+			//foreach (ModMBAddon addon in MBAddonLoader.addons)
+			//{
+			//	if (addon.CanGenerateOnChozoStatue())
+			//	{
+			//		pool.Add(addon.ItemType, addon.GenerationChance());
+			//	}
+			//}
 
 			return pool.Get();
 		}

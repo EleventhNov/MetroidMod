@@ -48,18 +48,7 @@ namespace MetroidMod
 
 		public int AddonSlot { get; set; } = MorphBallAddonSlotID.None;
 		public string GetAddonSlotName() => MBAddonLoader.GetAddonSlotName(AddonSlot);
-		/// <summary>
-		/// Determines if the addon can generate on Chozo Statues during world generation.
-		/// </summary>
-		/// <param name="x">The X location of the tile</param>
-		/// <param name="y">The Y location of the tile</param>
-		public virtual bool CanGenerateOnChozoStatue() => false;
-		/// <summary>
-		/// Determines how likely the addon will generate on Chozo Statues.
-		/// </summary>
-		/// <param name="x">The X location of the tile</param>
-		/// <param name="y">The Y location of the tile</param>
-		public virtual double GenerationChance() { return 0; }
+
 
 		public override sealed void SetupContent()
 		{

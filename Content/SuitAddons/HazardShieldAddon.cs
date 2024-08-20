@@ -28,9 +28,6 @@ namespace MetroidMod.Content.SuitAddons
 
 		public override bool AddOnlyAddonItem => false;
 
-		public override bool CanGenerateOnChozoStatue() => false;//WorldGen.drunkWorldGen;
-
-		public override double GenerationChance() => 20;
 
 		public override void SetStaticDefaults()
 		{
