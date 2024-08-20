@@ -37,7 +37,7 @@ namespace MetroidMod.Content.Items.Tiles
 		}
 		public override void RightClick(Player player)
 		{
-			player.QuickSpawnItem(player.GetSource_FromThis(), ChozoStatueDropPool.OrbItem());
+			player.QuickSpawnItem(player.GetSource_FromThis(), ChozoStatueDropPool.GetRandomChozoOrbItem());
 			//Item.NewItem(player.GetSource_FromThis(), player.position, (ushort)MSystem.OrbItem());
 			base.RightClick(player);
 		}

@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 using Terraria.ObjectData;
 
 namespace MetroidMod.Content.Tiles.ItemTile
@@ -67,15 +68,20 @@ namespace MetroidMod.Content.Tiles.ItemTile
 			if (!fail && !effectOnly)
 			{
 				noItem = true;
-				base.KillTile(i, j, ref fail, ref effectOnly, ref noItem);
-				Main.tile[i, j].TileType = (ushort)ChozoStatueDropPool.OrbItem();
 				fail = true;
+
+				int itemId = ChozoStatueDropPool.GetRandomChozoOrbItem();
+				Item item = new();
+				item.SetDefaults(itemId);
+				int tileId = item.createTile;
+
+				Main.tile[i, j].TileType = (ushort)tileId;
+
 				if ((Main.netMode == NetmodeID.MultiplayerClient || Main.netMode == NetmodeID.Server) && !Main.tile[i, j].HasTile)
 				{
 					NetMessage.SendData(MessageID.TileManipulation, -1, -1, null, 0, i, j, 0f, 0, 0, 0);
 					NetMessage.SendTileSquare(-1, i, j);
 				}
-				//Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 16, 16, Common.Systems.MSystem.OrbItem(i, j));
 			}
 		}
 	}

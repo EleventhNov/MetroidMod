@@ -8,111 +8,147 @@ using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 using Terraria;
 using MetroidMod.Common.Systems;
+using Terraria.Utilities;
+using MetroidMod.Content.Items.Addons;
+using MetroidMod.Content.Items.Accessories;
+using MetroidMod.Content.Items.Addons.Hunters;
+using MetroidMod.Content.Items.Addons.V2;
+using MetroidMod.Content.Items.Addons.V3;
+using MetroidMod.Content.Items.MissileAddons.BeamCombos;
+using MetroidMod.Content.Items.MissileAddons;
+using static MetroidMod.Sounds;
+using System.Reflection;
+using Terraria.ID;
 
 namespace MetroidMod.Common
 {
-	internal static class ChozoStatueDropPool
+	internal class ChozoStatueDropPool
 	{
-		public static int OrbItem()
+		private readonly WeightedRandom<int> weightedItems = new();
+
+		private void AddItem<T>(double weight) where T: ModItem
 		{
-			MetroidBossDown bossesDown = MSystem.bossesDown;
-
-			int item = ModContent.TileType<MorphBallTile>();
-			WeightedChance[] list = new WeightedChance[SuitAddonLoader.AddonCount + 5 + MBAddonLoader.AddonCount + 35];
-			int index = 0;
-			foreach (ModSuitAddon addon in SuitAddonLoader.addons)
-			{
-				if (addon.CanGenerateOnChozoStatue()) { list[index++] = new WeightedChance(() => { item = addon.TileType; }, addon.GenerationChance()); }
-			}
-			foreach (ModMBAddon addon in MBAddonLoader.addons)
-			{
-				if (addon.CanGenerateOnChozoStatue()) { list[index++] = new WeightedChance(() => { item = addon.TileType; }, addon.GenerationChance()); }
-			}
-			list[index++] = new WeightedChance(() => { item = ModContent.TileType<ChargeBeamTile>(); }, 8);
-			list[index++] = new WeightedChance(() => { item = ModContent.TileType<HiJumpBootsTile>(); }, 8);
-			list[index++] = new WeightedChance(() => { item = ModContent.TileType<WaveBeamTile>(); }, 8);
-			list[index++] = new WeightedChance(() => { item = ModContent.TileType<HomingMissile>(); }, 4);
-			list[index++] = new WeightedChance(() => { item = ModContent.TileType<SpaceJumpBootsTile>(); }, 4);
-			if (NPC.downedQueenBee || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
-			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<SpazerTile>(); }, 8);
-			}
-			if (NPC.downedBoss3 || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
-			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<IceBeamTile>(); }, 8);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<IceMissile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<SpazerCombo>(); }, 4);
-			}
-			if (NPC.downedMechBoss2 || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
-			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<ChargeBeamV2Tile>(); }, 4);
-			}
-			if (NPC.downedMechBoss1 || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
-			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<WaveBeamV2Tile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<Flamethrower>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<PlasmaMachinegun>(); }, 4);
-			}
-			if (NPC.downedMechBoss3 || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
-			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<WideBeamTile>(); }, 4);
-			}
-			if (bossesDown.HasFlag(MetroidBossDown.downedKraid) || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
-			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<PlasmaBeamGreenTile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<PlasmaBeamRedTile>(); }, 4);
-			}
-			if (Main.hardMode || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
-			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<SuperMissile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<IceSpreader>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<SeekerMissile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<Wavebuster>(); }, 4);
-			}
-			if (NPC.downedPlantBoss || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
-			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<NovaCombo>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<NovaBeamTile>(); }, 4);
-			}
-			if (NPC.downedMoonlord || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
-			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<StardustCombo>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<StardustMissile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<SolarCombo>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<NebulaCombo>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<NebulaMissile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<SolarBeamTile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<StardustBeamTile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<VortexBeamTile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<LuminiteBeamTile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<NebulaBeamTile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<OmegaCannonTile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<PhazonBeamTile>(); }, 4);
-			}
-			if (NPC.downedMechBossAny || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
-			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<DiffusionMissile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<SpaceJumpTile>(); }, 4);
-			}
-			if (NPC.downedChristmasIceQueen || Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues)
-			{
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<IceBeamV2Tile>(); }, 4);
-				list[index++] = new WeightedChance(() => { item = ModContent.TileType<IceSuperMissile>(); }, 4);
-			}
-			Array.Resize(ref list, index);
-			double numericValue = WorldGen.genRand.Next(0, (int)list.Sum(p => p.Ratio));
-
-			foreach (WeightedChance parameter in list)
-			{
-				numericValue -= parameter.Ratio;
-
-				if (!(numericValue <= 0)) { continue; }
-
-				parameter.Func();
-				break;
-			}
-			return item;
+			int itemType = ModContent.ItemType<T>();
+			AddItem(itemType, weight);
 		}
 
+		private void AddItem(int itemType, double weight)
+		{
+			weightedItems.Add(itemType, weight);
+		}
+
+		public static int GetRandomChozoOrbItem()
+		{
+			ChozoStatueDropPool pool = new();
+			MetroidBossDown bossesDown = MSystem.bossesDown;
+
+			pool.AddItem<ChargeBeamAddon>(8);
+			pool.AddItem<HiJumpBoots>(8);
+			pool.AddItem<WaveBeamAddon>(8);
+			pool.AddItem<HomingMissileAddon>(4);
+			pool.AddItem<SpaceJumpBoots>(4);
+
+			if(ItemCondition(NPC.downedQueenBee))
+			{
+				pool.AddItem<SpazerAddon>(8);
+			}
+
+			if (ItemCondition(NPC.downedBoss3))
+			{
+				pool.AddItem<IceBeamAddon>(8);
+				pool.AddItem<IceMissileAddon>(4);
+				pool.AddItem<SpazerComboAddon>(4);
+			}
+
+			if (ItemCondition(Main.hardMode))
+			{
+				pool.AddItem<SuperMissileAddon>(4);
+				pool.AddItem<IceSpreaderAddon>(4);
+				pool.AddItem<SeekerMissileAddon>(4);
+				pool.AddItem<WavebusterAddon>(4);
+			}
+
+			if (ItemCondition(NPC.downedMechBossAny))
+			{
+				pool.AddItem<DiffusionMissileAddon>(4);
+				pool.AddItem<SpaceJump>(4);
+			}
+
+			if (ItemCondition(NPC.downedMechBoss1))
+			{
+				pool.AddItem<WaveBeamV2Addon>(4);
+				pool.AddItem<FlamethrowerAddon>(4);
+				pool.AddItem<PlasmaMachinegunAddon>(4);
+			}
+
+			if (ItemCondition(NPC.downedMechBoss2))
+			{
+				pool.AddItem<ChargeBeamV2Addon>(4);
+			}
+
+			if (ItemCondition(NPC.downedMechBoss3))
+			{
+				pool.AddItem<WideBeamAddon>(4);
+			}
+
+			if (ItemCondition(NPC.downedPlantBoss))
+			{
+				pool.AddItem<NovaComboAddon>(4);
+				pool.AddItem<NovaBeamAddon>(4);
+			}
+
+			if (ItemCondition(NPC.downedChristmasIceQueen))
+			{
+				pool.AddItem<IceBeamV2Addon>(4);
+				pool.AddItem<IceSuperMissileAddon>(4);
+			}
+
+			if (ItemCondition(NPC.downedMoonlord))
+			{
+				pool.AddItem<StardustComboAddon>(4);
+				pool.AddItem<StardustMissileAddon>(4);
+				pool.AddItem<SolarComboAddon>(4);
+				pool.AddItem<NebulaComboAddon>(4);
+				pool.AddItem<NebulaMissileAddon>(4);
+				pool.AddItem<SolarBeamAddon>(4);
+				pool.AddItem<StardustBeamAddon>(4);
+				pool.AddItem<VortexBeamAddon>(4);
+				pool.AddItem<LuminiteBeamAddon>(4);
+				pool.AddItem<NebulaBeamAddon>(4);
+				pool.AddItem<OmegaCannonAddon>(4);
+				pool.AddItem<PhazonBeamAddon>(4);
+			}
+
+			// TODO currently doesn't take into account the Blaze Beam rework
+			if (ItemCondition(bossesDown.HasFlag(MetroidBossDown.downedKraid)))
+			{
+				pool.AddItem<PlasmaBeamGreenAddon>(4);
+				pool.AddItem<PlasmaBeamRedAddon>(4);
+			}
+
+			foreach (ModSuitAddon addon in SuitAddonLoader.addons)
+			{
+				if (addon.CanGenerateOnChozoStatue())
+				{
+					pool.AddItem(addon.ItemType, addon.GenerationChance());
+				}
+			}
+
+			foreach (ModMBAddon addon in MBAddonLoader.addons)
+			{
+				if (addon.CanGenerateOnChozoStatue())
+				{
+					pool.AddItem(addon.ItemType, addon.GenerationChance());
+				}
+			}
+
+			return pool.weightedItems.Get();
+		}
+
+		private static bool ItemCondition(bool flag)
+		{
+			bool allItemsEnabled = Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues;
+			return flag || allItemsEnabled;
+		}
 	}
 }
