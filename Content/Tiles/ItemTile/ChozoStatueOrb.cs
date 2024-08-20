@@ -1,3 +1,4 @@
+using MetroidMod.Common;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Xna.Framework;
 using Terraria;
@@ -67,7 +68,7 @@ namespace MetroidMod.Content.Tiles.ItemTile
 			{
 				noItem = true;
 				base.KillTile(i, j, ref fail, ref effectOnly, ref noItem);
-				Main.tile[i, j].TileType = (ushort)Common.Systems.MSystem.OrbItem();
+				Main.tile[i, j].TileType = (ushort)ChozoStatueDropPool.OrbItem();
 				fail = true;
 				if ((Main.netMode == NetmodeID.MultiplayerClient || Main.netMode == NetmodeID.Server) && !Main.tile[i, j].HasTile)
 				{

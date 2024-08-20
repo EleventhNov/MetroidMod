@@ -1,3 +1,4 @@
+using MetroidMod.Common;
 using MetroidMod.Common.Systems;
 using Terraria;
 using Terraria.DataStructures;
@@ -36,7 +37,7 @@ namespace MetroidMod.Content.Items.Tiles
 		}
 		public override void RightClick(Player player)
 		{
-			player.QuickSpawnItem(player.GetSource_FromThis(), MSystem.OORB());
+			player.QuickSpawnItem(player.GetSource_FromThis(), ChozoStatueDropPool.OrbItem());
 			//Item.NewItem(player.GetSource_FromThis(), player.position, (ushort)MSystem.OrbItem());
 			base.RightClick(player);
 		}
