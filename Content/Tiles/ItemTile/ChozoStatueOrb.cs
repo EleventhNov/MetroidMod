@@ -70,10 +70,8 @@ namespace MetroidMod.Content.Tiles.ItemTile
 				noItem = true;
 				fail = true;
 
-				int itemId = ChozoStatueDropPool.GetRandomChozoOrbItem();
-				Item item = new();
-				item.SetDefaults(itemId);
-				int tileId = item.createTile;
+				int itemId = WorldGenPool.GetRandomChozoOrbItem();
+				int tileId = TileUtils.GetTileIdFromPlaceableItemId(itemId);
 
 				Main.tile[i, j].TileType = (ushort)tileId;
 

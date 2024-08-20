@@ -761,48 +761,7 @@ namespace MetroidMod.Common.Systems
 					Main.tile[i, k].Get<TileWallWireStateData>().Slope = SlopeType.Solid;
 					Main.tile[i, k].Get<TileWallWireStateData>().IsHalfBlock = false;
 					Main.tile[i, num].Get<TileWallWireStateData>().HasTile = true;
-					ushort output = (ushort)ModContent.TileType<MissileExpansionTile>();
-					WeightedChance[] list = new WeightedChance[9];
-					int index = 0;
-					list[index++] = new WeightedChance(() => { output = (ushort)ModContent.TileType<MissileExpansionTile>(); }, 50);
-					list[index++] = new WeightedChance(() => { output = (ushort)SuitAddonLoader.GetAddon<EnergyTank>().TileType; }, 14);
-					list[index++] = new WeightedChance(() => { output = (ushort)ModContent.TileType<ImperialistTile>(); }, 1);
-					list[index++] = new WeightedChance(() => { output = (ushort)ModContent.TileType<JudicatorTile>(); }, 1);
-					list[index++] = new WeightedChance(() => { output = (ushort)ModContent.TileType<MagMaulTile>(); }, 1);
-					list[index++] = new WeightedChance(() => { output = (ushort)ModContent.TileType<BattleHammerTile>(); }, 1);
-					list[index++] = new WeightedChance(() => { output = (ushort)ModContent.TileType<VoltDriverTile>(); }, 1);
-					list[index++] = new WeightedChance(() => { output = (ushort)ModContent.TileType<ShockCoilTile>(); }, 1);
-					list[index++] = new WeightedChance(() => { output = (ushort)ModContent.TileType<UAExpansionTile>(); }, 12);
-					/*switch (Main.rand.Next(14))
-					{
-						case 0: 
-						case 1:
-						case 2: 
-						case 3: output = (ushort)ModContent.TileType<MissileExpansionTile>(); break;
-						case 4:
-						case 5: output = (ushort)SuitAddonLoader.GetAddon<EnergyTank>().TileType; break;
-						case 6: output = (ushort)ModContent.TileType<ImperialistTile>() ; break;
-						case 7: output = (ushort)ModContent.TileType<JudicatorTile>(); break;
-						case 8: output = (ushort)ModContent.TileType<MagMaulTile>(); break;
-						case 9: output = (ushort)ModContent.TileType<BattleHammerTile>(); break;
-						case 10: output = (ushort)ModContent.TileType<VoltDriverTile>(); break;
-						case 11: output = (ushort)ModContent.TileType<ShockCoilTile>(); break;
-						case 12:
-						case 13: output = (ushort)ModContent.TileType<UAExpansionTile>(); break;
-					}*/
-					Array.Resize(ref list, index);
-					double numericValue = WorldGen.genRand.Next(0, (int)list.Sum(p => p.Ratio));
-
-					foreach (WeightedChance parameter in list)
-					{
-						numericValue -= parameter.Ratio;
-
-						if (!(numericValue <= 0)) { continue; }
-
-						parameter.Func();
-						break;
-					}
-					Main.tile[i, num].Get<TileTypeData>().Type = output;
+					Main.tile[i, num].Get<TileTypeData>().Type = (ushort)WorldGenPool.GetRandomExpansionTile();
 
 					Main.tile[i, num].Get<TileWallWireStateData>().TileFrameX = 0;
 					Main.tile[i, num].Get<TileWallWireStateData>().TileFrameY = 0;

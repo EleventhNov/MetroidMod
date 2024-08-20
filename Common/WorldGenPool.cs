@@ -19,27 +19,15 @@ using MetroidMod.Content.Items.MissileAddons;
 using static MetroidMod.Sounds;
 using System.Reflection;
 using Terraria.ID;
+using MetroidMod.Content.SuitAddons;
 
 namespace MetroidMod.Common
 {
-	internal class ChozoStatueDropPool
+	internal class WorldGenPool
 	{
-		private readonly WeightedRandom<int> weightedItems = new();
-
-		private void AddItem<T>(double weight) where T: ModItem
-		{
-			int itemType = ModContent.ItemType<T>();
-			AddItem(itemType, weight);
-		}
-
-		private void AddItem(int itemType, double weight)
-		{
-			weightedItems.Add(itemType, weight);
-		}
-
 		public static int GetRandomChozoOrbItem()
 		{
-			ChozoStatueDropPool pool = new();
+			WorldGenPool pool = new();
 			MetroidBossDown bossesDown = MSystem.bossesDown;
 
 			pool.AddItem<ChargeBeamAddon>(8);
@@ -48,19 +36,19 @@ namespace MetroidMod.Common
 			pool.AddItem<HomingMissileAddon>(4);
 			pool.AddItem<SpaceJumpBoots>(4);
 
-			if(ItemCondition(NPC.downedQueenBee))
+			if(Condition(NPC.downedQueenBee))
 			{
 				pool.AddItem<SpazerAddon>(8);
 			}
 
-			if (ItemCondition(NPC.downedBoss3))
+			if (Condition(NPC.downedBoss3))
 			{
 				pool.AddItem<IceBeamAddon>(8);
 				pool.AddItem<IceMissileAddon>(4);
 				pool.AddItem<SpazerComboAddon>(4);
 			}
 
-			if (ItemCondition(Main.hardMode))
+			if (Condition(Main.hardMode))
 			{
 				pool.AddItem<SuperMissileAddon>(4);
 				pool.AddItem<IceSpreaderAddon>(4);
@@ -68,42 +56,42 @@ namespace MetroidMod.Common
 				pool.AddItem<WavebusterAddon>(4);
 			}
 
-			if (ItemCondition(NPC.downedMechBossAny))
+			if (Condition(NPC.downedMechBossAny))
 			{
 				pool.AddItem<DiffusionMissileAddon>(4);
 				pool.AddItem<SpaceJump>(4);
 			}
 
-			if (ItemCondition(NPC.downedMechBoss1))
+			if (Condition(NPC.downedMechBoss1))
 			{
 				pool.AddItem<WaveBeamV2Addon>(4);
 				pool.AddItem<FlamethrowerAddon>(4);
 				pool.AddItem<PlasmaMachinegunAddon>(4);
 			}
 
-			if (ItemCondition(NPC.downedMechBoss2))
+			if (Condition(NPC.downedMechBoss2))
 			{
 				pool.AddItem<ChargeBeamV2Addon>(4);
 			}
 
-			if (ItemCondition(NPC.downedMechBoss3))
+			if (Condition(NPC.downedMechBoss3))
 			{
 				pool.AddItem<WideBeamAddon>(4);
 			}
 
-			if (ItemCondition(NPC.downedPlantBoss))
+			if (Condition(NPC.downedPlantBoss))
 			{
 				pool.AddItem<NovaComboAddon>(4);
 				pool.AddItem<NovaBeamAddon>(4);
 			}
 
-			if (ItemCondition(NPC.downedChristmasIceQueen))
+			if (Condition(NPC.downedChristmasIceQueen))
 			{
 				pool.AddItem<IceBeamV2Addon>(4);
 				pool.AddItem<IceSuperMissileAddon>(4);
 			}
 
-			if (ItemCondition(NPC.downedMoonlord))
+			if (Condition(NPC.downedMoonlord))
 			{
 				pool.AddItem<StardustComboAddon>(4);
 				pool.AddItem<StardustMissileAddon>(4);
@@ -120,7 +108,7 @@ namespace MetroidMod.Common
 			}
 
 			// TODO currently doesn't take into account the Blaze Beam rework
-			if (ItemCondition(bossesDown.HasFlag(MetroidBossDown.downedKraid)))
+			if (Condition(bossesDown.HasFlag(MetroidBossDown.downedKraid)))
 			{
 				pool.AddItem<PlasmaBeamGreenAddon>(4);
 				pool.AddItem<PlasmaBeamRedAddon>(4);
@@ -130,7 +118,7 @@ namespace MetroidMod.Common
 			{
 				if (addon.CanGenerateOnChozoStatue())
 				{
-					pool.AddItem(addon.ItemType, addon.GenerationChance());
+					pool.Add(addon.ItemType, addon.GenerationChance());
 				}
 			}
 
@@ -138,14 +126,56 @@ namespace MetroidMod.Common
 			{
 				if (addon.CanGenerateOnChozoStatue())
 				{
-					pool.AddItem(addon.ItemType, addon.GenerationChance());
+					pool.Add(addon.ItemType, addon.GenerationChance());
 				}
 			}
 
-			return pool.weightedItems.Get();
+			return pool.Get();
 		}
 
-		private static bool ItemCondition(bool flag)
+		public static int GetRandomExpansionTile()
+		{
+			WorldGenPool pool = new();
+
+			pool.Add(SuitAddonLoader.GetAddon<EnergyTank>().TileType, 14);
+			pool.AddTile<MissileExpansionTile>(50);
+			pool.AddTile<ImperialistTile>(1);
+			pool.AddTile<JudicatorTile>(1);
+			pool.AddTile<MagMaulTile>(1);
+			pool.AddTile<BattleHammerTile>(1);
+			pool.AddTile<VoltDriverTile>(1);
+			pool.AddTile<ShockCoilTile>(1);
+			pool.AddTile<UAExpansionTile>(12);
+
+			return pool.Get();
+		}
+
+
+		private readonly WeightedRandom<int> weightedRandom = new();
+
+		private void AddItem<T>(double weight) where T : ModItem
+		{
+			int itemType = ModContent.ItemType<T>();
+			weightedRandom.Add(itemType, weight);
+		}
+
+		private void AddTile<T>(double weight) where T : ModTile
+		{
+			int itemType = ModContent.TileType<T>();
+			weightedRandom.Add(itemType, weight);
+		}
+
+		private void Add(int type, double weight)
+		{
+			weightedRandom.Add(type, weight);
+		}
+
+		private int Get()
+		{
+			return weightedRandom.Get();
+		}
+
+		private static bool Condition(bool flag)
 		{
 			bool allItemsEnabled = Configs.MConfigMain.Instance.drunkWorldHasDrunkStatues;
 			return flag || allItemsEnabled;

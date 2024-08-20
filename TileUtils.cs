@@ -12,6 +12,16 @@ namespace MetroidMod
 	public static class TileUtils
 	{
 		/// <summary>
+		/// Given the ID of an item that places a tile, returns the ID of that tile.
+		/// </summary>
+		public static int GetTileIdFromPlaceableItemId(int itemId)
+		{
+			Item item = new();
+			item.SetDefaults(itemId);
+			return item.createTile;
+		}
+
+		/// <summary>
 		/// Atttempts to find the top-left corner of a multitile at location (<paramref name="x"/>, <paramref name="y"/>)
 		/// </summary>
 		/// <param name="x">The tile X-coordinate</param>
